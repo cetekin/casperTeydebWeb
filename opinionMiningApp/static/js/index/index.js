@@ -44,6 +44,12 @@ function pass_func(template_values) {
                         }
                 });
 
+                for (var i = 0; i < template_values["deviceList"].length; i++) {
+                        $("#device_list").append("<option value='"+template_values["deviceList"][i]+"'>"+template_values["deviceList"][i]+"</option>");
+                }
+                $("#device_list").val(template_values["deviceName"]).change();
+
+
                 $( "#dismiss-button" ).before("Yukarıdaki çubuk grafik; "+template_values["textCount"]+ " adet değerlendirme metni üzerinde analiz yapılarak, " + template_values["reportDate"] + " tarihinde oluşturulmuştur.");
 
         });
