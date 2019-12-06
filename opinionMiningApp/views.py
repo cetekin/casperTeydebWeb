@@ -27,12 +27,34 @@ def index(request):
             #ONEMLI --> User authentication sistemi geldiginde Casper yazılı kisma mevcut kullanicinin companyName i yazilmali
             last_object = OpinionMiningResult.objects.filter(companyName="Casper", deviceName=device).latest('_id')
 
+        #To show the user general opinion mining results (not aspect-based), calculating total positive-negative counts in the object
+        aspect_stats = json.loads(last_object.aspectStats)
+        general_stats = {
+            "positiveTotalCnt":0,
+            "negativeTotalCnt":0
+        }
+
+        for aspect in aspect_stats:
+            general_stats["positiveTotalCnt"] += aspect_stats[aspect]["positiveCnt"]
+            general_stats["negativeTotalCnt"] += aspect_stats[aspect]["negativeCnt"]
+
+        denominator = general_stats["positiveTotalCnt"] + general_stats["negativeTotalCnt"];
+        general_stats["positiveTotalCnt"] *= 100;
+        general_stats["positiveTotalCnt"] /= denominator;
+
+        general_stats["negativeTotalCnt"] *= 100;
+        general_stats["negativeTotalCnt"] /= denominator;
+
+        general_stats["positiveTotalCnt"] = round(general_stats["positiveTotalCnt"])
+        general_stats["negativeTotalCnt"] = round(general_stats["negativeTotalCnt"])
+
 
         template_values_curr = {
             "deviceName":last_object.deviceName,
             "reportDate":last_object.reportDate,
             "textCount":last_object.textCount,
             "aspectStats":last_object.aspectStats,
-            "deviceList":deviceList
+            "deviceList":deviceList,
+            "generalStats":general_stats
         }
         return render(request, 'opMiningApp/home.html',{"template_values_curr":template_values_curr})

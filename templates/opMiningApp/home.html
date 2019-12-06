@@ -77,10 +77,22 @@
 
         <main role="main" class="container">
 
-                <div class="starter-template">
+                <div id="canvas-cont" class="starter-template">
                         <canvas class="mt-5" id="aspectStatsChart"></canvas>
+                        <!-- Default inline 1-->
+                        <label for="graphic-kind">Grafik Türü: </label>
+                        <div id="graphic-kind" class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" value="aspect-based" id="defaultInline1" name="inlineDefaultRadiosExample" checked>
+                            <label class="custom-control-label" for="defaultInline1">Özellik Bazlı</label>
+                        </div>
+
+                        <!-- Default inline 2-->
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" class="custom-control-input" value="general" id="defaultInline2" name="inlineDefaultRadiosExample">
+                            <label class="custom-control-label" for="defaultInline2">Genel</label>
+                        </div>
                         <form action="/" method="post" id="devile_list_form">{% csrf_token %}
-                                <div  class="mt-5 mb-4">Cihaz Seçiniz:
+                                <div  class="mt-4 mb-4">Cihaz Seçiniz:
                                         <select id="device_list" name="device_list" data-live-search="true" class="col-6 selectpicker">
                                         </select>
                                         <input type="submit" class="ml-3 btn btn-primary" value="Grafiği Göster">
