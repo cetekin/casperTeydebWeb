@@ -61,47 +61,64 @@ function init_bar_graph(aspect_based) {
 function pass_func(template_values) {
         $(document).ready(function() {
                 /* Getting the opinion mining results */
-                var aspectStats = JSON.parse(template_values["aspectStats"]);
+                var aspectStats;
                 var aspectList = [];
                 var positiveCntList = [];
                 var negativeCntList = [];
 
-                /* Extracting info from dict */
-                for (var aspect in aspectStats) {
+                if (template_values["error_msg"] == "no_error" || template_values["error_msg"] == "selected_no_result") {
+
+                    if (template_values["error_msg"] == "selected_no_result") {
+                        $('#warning-body').text("Seçilen ürün için sonuç bulunamadı!");
+                        $('#exampleModalCenter').modal('show');
+                    }
+                    aspectStats = JSON.parse(template_values["aspectStats"]);
+                    /* Extracting info from dict */
+                    for (var aspect in aspectStats) {
                         aspectList.push(aspect);
                         positiveCntList.push(parseInt(aspectStats[aspect]["positiveCnt"]));
-                        negativeCntList.push(parseInt(aspectStats[aspect]["negativeCnt"])*-1);
+                        negativeCntList.push(parseInt(aspectStats[aspect]["negativeCnt"]) * -1);
 
-                }
-
-                /* Preserving the report datas for general and aspect-based graphs seperately */
-                ab_preserved_labels = aspectList;
-                ab_preserved_data1 = positiveCntList;
-                ab_preserved_data2 = negativeCntList;
-                general_preserved_labels = ["Yorumlar"]
-                general_preserved_data1 = [template_values["generalStats"]["positiveTotalCnt"]]
-                general_preserved_data2 = [template_values["generalStats"]["negativeTotalCnt"]]
-
-                init_bar_graph(true);
-
-
-                for (var i = 0; i < template_values["deviceList"].length; i++) {
-                        $("#device_list").append("<option value='"+template_values["deviceList"][i]+"'>"+template_values["deviceList"][i]+"</option>");
-                }
-                $("#device_list").val(template_values["deviceName"]).change();
-
-
-                $( "#dismiss-button" ).before("Yukarıdaki çubuk grafik; "+template_values["textCount"]+ " adet değerlendirme metni üzerinde analiz yapılarak, " + template_values["reportDate"] + " tarihinde oluşturulmuştur.");
-
-                $('input[type=radio][name=inlineDefaultRadiosExample]').change(function() {
-
-                    if (this.value == 'aspect-based') {
-                        init_bar_graph(true);
-                    } else if (this.value == 'general') {
-                        init_bar_graph(false);
                     }
-                });
 
+                    /* Preserving the report datas for general and aspect-based graphs seperately */
+                    ab_preserved_labels = aspectList;
+                    ab_preserved_data1 = positiveCntList;
+                    ab_preserved_data2 = negativeCntList;
+                    general_preserved_labels = ["Yorumlar"]
+                    general_preserved_data1 = [template_values["generalStats"]["positiveTotalCnt"]]
+                    general_preserved_data2 = [template_values["generalStats"]["negativeTotalCnt"]]
+
+                    init_bar_graph(true);
+
+
+                    for (var i = 0; i < template_values["deviceList"].length; i++) {
+                        $("#device_list").append("<option value='" + template_values["deviceList"][i] + "'>" + template_values["deviceList"][i] + "</option>");
+                    }
+                    $("#device_list").val(template_values["deviceName"]).change();
+
+
+                    $("#dismiss-button").before("Yukarıdaki çubuk grafik; " + template_values["textCount"] + " adet değerlendirme metni üzerinde analiz yapılarak, " + template_values["reportDate"] + " tarihinde oluşturulmuştur.");
+
+                    /* Grafikler arasinda gecis */
+                    $('input[type=radio][name=inlineDefaultRadiosExample]').change(function() {
+
+                        if (this.value == 'aspect-based') {
+                            init_bar_graph(true);
+                        } else if (this.value == 'general') {
+                            init_bar_graph(false);
+                        }
+                    });
+                }
+
+                else if (template_values["error_msg"] == "no_product") {
+                    $('#warning-body').text("Sistemde hiçbir ürününüz hakkında yorum bulunmamaktadır!");
+                    $('#exampleModalCenter').modal('show');
+                }
+                else if (template_values["error_msg"] == "no_result") {
+                    $('#warning-body').text("Sistemdeki ürünleriniz hakkında yapılan yorumlar üzerinde henüz hiç analiz yapılmamıştır!");
+                    $('#exampleModalCenter').modal('show');
+                }
         });
 
 }
